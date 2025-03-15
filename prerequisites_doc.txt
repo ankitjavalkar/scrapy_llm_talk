@@ -1,0 +1,26 @@
+Prerequisites:
+
+This talk is not inherently designed as a workshop or a work along tutorial.
+In case you still want to work on the examples during the talk, here are a list of 
+pre-requisites and dependencies required:
+
+Github Repo Link: https://github.com/ankitjavalkar/scrapy_llm_talk
+
+1. Python 3.11.9 or higher
+2. PIP or a similar Python package manager
+3. Ollama installed on your Local PC (Web Link: https://ollama.com/download) [1*]
+4. Mistral 7B AI Model - Installed using command `ollama pull mistral`
+5. Python package dependencies:
+    - Scrapy
+    - html2text
+    - litellm
+    - ollama
+
+    These can be installed using the command: 
+        `pip install html2text litellm scrapy ollama`
+    These can be installed using the requirements file in the github repository
+
+[1*] Please note that Ollama is an AI model/system. if you want to try 
+running LLMs locally with Ollama, make sure you have a modern CPU or a 
+dedicated GPU.
+
