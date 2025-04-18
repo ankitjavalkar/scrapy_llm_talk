@@ -11,6 +11,20 @@ html_cleaner = HTML2Text()
 logger = getLogger(__name__)
 
 
+async def llm_parse(response, prompts):
+    """
+    This method accepts a Scrapy response object and a dict with the field names as keys and
+    the field specific prompts as values. It returns the LLM response
+    """
+
+    # Generate a list of keys and formatted string of key value pairs from prompt dict
+    # Convert response to markdown
+    # Ask the LLM
+    # Get the result data from the API response
+    # Check if the result data is valid JSON and return the JSON or JSONDecodeError
+
+    pass
+
 class BooksToScrapeComLLMSpider(Spider):
     name = "books_toscrape_com_llm"
     start_urls = [
@@ -28,5 +42,25 @@ class BooksToScrapeComLLMSpider(Spider):
 
     async def parse_book(self, response):
         # Define the field names and field data prompts
+
+        # Prompt 1 - To get product name and product price
+        prompts = {
+            "name": "Product name",
+            "price": "Product price as a number, without the currency symbol",
+        }
+
+        # Prompt 2 - To get product name and list of character names from description
+        # prompts = {
+        #     "name": "Product name",
+        #     "characters": "Comma separated list of names from the Product description",
+        # }
+
+
         # Call the LLM via API
+        llm_data = await llm_parse(response, prompts)
+
         # Result data
+        yield {
+            "url": response.url,
+            **llm_data,
+        }
