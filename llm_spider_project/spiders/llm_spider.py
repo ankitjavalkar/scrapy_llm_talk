@@ -18,12 +18,42 @@ async def llm_parse(response, prompts):
     """
 
     # Generate a list of keys and formatted string of key value pairs from prompt dict
-    # Convert response to markdown
-    # Ask the LLM
-    # Get the result data from the API response
-    # Check if the result data is valid JSON and return the JSON or JSONDecodeError
+    key_list = ", ".join(prompts)
+    formatted_scheme = "\n".join(f"{k}: {v}" for k, v in prompts.items())
 
-    pass
+    # Convert response to markdown
+    markdown = html_cleaner.handle(response.text)
+
+    # Ask the LLM
+    llm_response = await acompletion(
+        messages=[
+            {
+                "role": "user",
+                "content": (
+                    f"Return a JSON object with the following root keys: "
+                    f"{key_list}\n"
+                    f"\n"
+                    f"Data to scrape:\n"
+                    f"{formatted_scheme}\n"
+                    f"\n"
+                    f"Scrape it from the following Markdown text:\n"
+                    f"\n"
+                    f"{markdown}"
+                ),
+            },
+        ],
+        model="ollama/mistral",
+    )
+
+    # Get the result data from the API response
+    data = llm_response["choices"][0]["message"]["content"]
+
+    # Check if the result data is valid JSON and return the JSON or JSONDecodeError
+    try:
+        return json.loads(data)
+    except JSONDecodeError:
+        logger.error(f"LLM returned an invalid JSON for {response.url}: {data}")
+        return {}
 
 class BooksToScrapeComLLMSpider(Spider):
     name = "books_toscrape_com_llm"
