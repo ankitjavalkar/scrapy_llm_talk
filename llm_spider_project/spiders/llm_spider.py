@@ -18,8 +18,13 @@ class BooksToScrapeComLLMSpider(Spider):
     ]
 
     def parse(self, response):
-        # Parse the book links on the listing page
         # Parse the pagination link and parse the next page
+        next_page_links = response.css(".next a")
+        yield from response.follow_all(next_page_links)
+
+        # Parse the book links on the listing page
+        book_links = response.css("article a")
+        yield from response.follow_all(book_links, callback=self.parse_book)
 
     async def parse_book(self, response):
         # Define the field names and field data prompts
